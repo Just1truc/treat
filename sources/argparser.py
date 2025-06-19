@@ -22,14 +22,4 @@ study_subparser.add_argument("--scoring", default='sbs', choices=["sbs", "ivs"])
 study_subparser.add_argument("--teacher-epochs", default=50, type=int)
 study_subparser.add_argument("--student-epochs", default=10, type=int)
 
-
-# emb_model: default: sentence-transformers/all-MiniLM-L6-v2
-# depth: (2+), default: 7 (128)
-# dataset: customs (wikitext2), any huggingface dataset
-# batch_size: default 8
-# display_freq: default (1)
-# save_plot_frequency: default (50)
-# gating: default: summation, gated, data-driven 
-# scoring: default: sbs, ivs 
-
 train_subparser = subparsers.add_parser("train")

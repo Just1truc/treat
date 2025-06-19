@@ -63,6 +63,8 @@ def train_teacher(
 
         print(f"Epoch {epoch} | Step {step} | Loss: {loss.item():.4f} | Accuracy: {epoch_acc / len(dataloader):.4f}")
 
+    if not os.path.exists("teacher"):
+        os.mkdir("teacher")
     torch.save(model.state_dict(), "teacher/teacher.pt")
     return model
 
