@@ -106,7 +106,7 @@ class MemoryTree(nn.Module):
         full_loss = 0.0
 
         if expected is not None:
-            
+            # training
             class_weights_per_level = []
             
             for level in range(self.tree_depth - 1, -1, -1):
@@ -123,7 +123,7 @@ class MemoryTree(nn.Module):
                     labels = expected[:, query_id] // (2 ** level)
                     contextual_emb = (q[:, query_id].unsqueeze(1).unsqueeze(2) @ self.hierarchical_memory[level]).squeeze(2)
                     
-                    if self.gating == "ivs":
+                    if self.gating == "rvs":
                         logits = (contextual_emb @ (v[:, query_id].unsqueeze(-1))).squeeze(-1) / v.shape[-1]
                     else:
                         logits = (contextual_emb @ (q[:, query_id].unsqueeze(-1))).squeeze(-1)
@@ -134,6 +134,7 @@ class MemoryTree(nn.Module):
             return full_loss
 
         else:
+            # inference
             all_query_choices = t.empty(B, L_k, dtype=t.long, device=q.device)
 
             for query_id in range(L_k):
@@ -144,7 +145,7 @@ class MemoryTree(nn.Module):
                     left_embeddings = self.hierarchical_memory[level][batch_idx, choices * 2]
                     right_embeddings = self.hierarchical_memory[level][batch_idx, choices * 2 + 1]
 
-                    if self.gating == "ivs":
+                    if self.gating == "rvs":
                         left_contextual_emb = (query.unsqueeze(1) @ left_embeddings @ (v[:, query_id].unsqueeze(-1))).reshape(B) / v.shape[-1]
                         right_contextual_emb = (query.unsqueeze(1) @ right_embeddings @ (v[:, query_id].unsqueeze(-1))).reshape(B) / v.shape[-1]
                     else:

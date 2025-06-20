@@ -18,7 +18,7 @@ study_subparser.add_argument("--batch-size", default=8, type=int)
 study_subparser.add_argument("--display-freq", default=1, type=int)
 study_subparser.add_argument("--save-plot-freq", default=50, type=int)
 study_subparser.add_argument("--gating", default="summation", choices=["summation", "gated", "data-driven"])
-study_subparser.add_argument("--scoring", default='sbs', choices=["sbs", "ivs"])
+study_subparser.add_argument("--scoring", default='sbs', choices=["sbs", "rvs"])
 study_subparser.add_argument("--teacher-epochs", default=50, type=int)
 study_subparser.add_argument("--student-epochs", default=10, type=int)
 
