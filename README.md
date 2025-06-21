@@ -102,7 +102,7 @@ Visual results and plots are saved to the `plots/` folder. These include:
 ## 📝 Paper
 
 You can find more detail on the architecture and experiments here:
-[TreaT: Tree Attention for Efficient Retrieval](https://github.com/user-attachments/files/20845331/NLP_Report-2.pdf)
+[TreaT: Tree Attention for Efficient Retrieval](https://github.com/user-attachments/files/20845343/NLP_Report-3.pdf)
 
 ---
 
