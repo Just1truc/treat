@@ -6,8 +6,9 @@ import torch
 import torch as t
 import torch.nn.functional as F
 
-from tqdm       import tqdm
-from matplotlib import pyplot as plt
+from tqdm               import tqdm
+from matplotlib         import pyplot as plt
+from sklearn.metrics    import accuracy_score, mean_absolute_error
 
 from transformers       import AutoModel, AutoTokenizer
 from transformers       import DataCollatorForLanguageModeling
@@ -68,19 +69,12 @@ def train_teacher(
     torch.save(model.state_dict(), "teacher/teacher.pt")
     return model
 
-def compute_accuracy(predicted_indices, true_indices):
-    correct = 0
-    total = 0
-    variance_loss = 0
-    for pred, true in zip(predicted_indices, true_indices):
-        # print(pred, true)
-        correct += (pred == true).sum().item()
-        # print((pred == true))
-        variance_loss += t.sqrt((pred - true)**2).mean().item()
-        total += len(pred)
-        # print(len(pred))
-    # print(predicted_indices[0] == true_indices[0])
-    return correct / total if total > 0 else 0.0, variance_loss / len(predicted_indices) if total > 0 else 0.0
+def compute_metrics(predicted_indices, true_indices):
+    y_pred = predicted_indices.view(-1).cpu().numpy()
+    y_true = true_indices.view(-1).cpu().numpy()
+    acc = accuracy_score(y_true, y_pred)
+    mae = mean_absolute_error(y_true, y_pred)
+    return acc, mae
 
 def train_student(
     teacher : TinyTransformerTeacher,
@@ -126,7 +120,7 @@ def train_student(
                 context_embeddings = teacher.token_emb(context_ids)
                 predictions = memory_tree.oracle(hla.W_q(context_embeddings), hla.W_v(context_embeddings))
                 if args.format == "full":
-                    acc, var_loss = compute_accuracy(predictions, top1_indices.unsqueeze(1))
+                    acc, var_loss = compute_metrics(predictions, top1_indices)
                 else:
                     acc = ((predictions.argmax(-1) == (top1_indices // (top1_indices.shape[1] // 2))).sum() / (B * L)).item()
 
@@ -153,6 +147,7 @@ def train_student(
                     ax[2].legend("Var Curve")
 
                     plt.savefig(f"plots/auto_save_full_plot_{epoch}_{step}")
+                    
                 else:
                     fig, ax = plt.subplots(1, 2)
 
