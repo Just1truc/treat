@@ -99,6 +99,13 @@ Visual results and plots are saved to the `plots/` folder. These include:
 
 ---
 
+## 📝 Paper
+
+You can find more detail on the architecture and experiments here:
+[NLP_Report-2.pdf](https://github.com/user-attachments/files/20845331/NLP_Report-2.pdf)
+
+---
+
 ## 🧩 Acknowledgements
 
 * [Hugging Face Transformers](https://huggingface.co/transformers/) for model backbones
